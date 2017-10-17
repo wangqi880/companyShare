@@ -1,0 +1,16 @@
+server:
+  port: 8761
+security:
+  basic:
+    enabled: true
+  user:
+    name: user
+    password: password # 进行身份验证 需要添加依赖spring-boot-starter-security
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://user:password@localhost:8761/eureka
+    healthcheck:
+      enable: true
