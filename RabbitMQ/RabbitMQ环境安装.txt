@@ -1,0 +1,9 @@
+1.安装erlang  环境
+
+2.安装rabbitmq 
+
+3.安装可视化管理界面  sbin/rabbitmq-plugins enable rabbitmq_management
+
+http://blog.csdn.net/column/details/slimina-rabbitmq.html  安装及教程
+
+http://blog.csdn.net/column/details/rabbitmq.html          安装及教程

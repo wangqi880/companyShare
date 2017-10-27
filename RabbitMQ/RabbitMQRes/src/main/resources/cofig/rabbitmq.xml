@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                http://www.springframework.org/schema/rabbit
+                http://www.springframework.org/schema/rabbit/spring-rabbit-1.7.xsd
+                http://www.springframework.org/schema/context
+                http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<rabbit:annotation-driven/>
+	
+	<rabbit:connection-factory  host="192.168.206.202" id="conn" 
+	password="rabbitmq" username="rabbitmq" virtual-host="/" port="5672"/>
+	
+	<rabbit:admin connection-factory="conn" id="rabbitAdmin"/>
+	
+	<rabbit:queue auto-declare="true" durable="true" auto-delete="false" name="springQueue" />
+	<rabbit:queue auto-declare="true" durable="true" auto-delete="false" name="springQueue1" />
+	
+	<rabbit:direct-exchange name="springExchange">
+		<rabbit:bindings>
+			<rabbit:binding key="springRoutingkey" queue="springQueue"> </rabbit:binding>
+			<rabbit:binding key="springRoutingkey1" queue="springQueue1"> </rabbit:binding>
+		</rabbit:bindings>	
+	</rabbit:direct-exchange>
+	
+	
+	<bean id="tryrest" class="org.springframework.retry.support.RetryTemplate">
+		<property name="backOffPolicy">
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<!-- 重试开始时间 -->
+				<property name="initialInterval" value="10000"/>
+				<!-- 重试间隔时间增长倍数 -->
+				<property name="multiplier" value="2"/>
+				<!-- 最大重试间隔时间 -->
+				<property name="maxInterval" value="5000"/>
+			</bean>
+		</property>
+		<property name="retryPolicy">
+			<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+				<property name="maxAttempts" value="3"/>
+			</bean>
+		</property>
+	</bean> 
+	
+	
+	
+	<bean id="amqpMessageConvert" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"></bean>
+	<rabbit:template id="rabbitmqTemplate" exchange="springExchange" connection-factory="conn"
+	 message-converter="amqpMessageConvert" retry-template="tryrest" >
+	 </rabbit:template>
+	
+	<!-- ChannelAwareMessageListener 实现这个类可以通过channel 手动确认消息是否消费  -->
+	<!-- <bean id="mqListener" class="com.rabbitmq.res.RabbitMQLisenter"></bean> -->
+	<bean id="mqListener" class="com.rabbitmq.res.MQChannelAwareMessageListener"></bean>
+	<bean class="com.rabbitmq.res.RabbitMQResExceptionHandler"  id="exHandler"/>
+	
+	
+	
+	<!-- acknowledge="manual"  手动确认消息  ChannelAwareMessageListener  -->
+	<!-- error-handler 异常 处理但是 。。onMessage 方法不能捕获异常 -->
+	<!-- <rabbit:listener-container  error-handler="exHandler"  concurrency="5"  connection-factory="conn" acknowledge="manual"> 
+		<rabbit:listener queues="springQueue,springQueue1" ref="mqListener" />
+	</rabbit:listener-container> -->
+	
+	
+	<!-- ++++++++++++++++++++++++++ -->
+	
+	<!--  topic  -->
+   <rabbit:queue auto-declare="true" auto-delete="false" durable="true"
+	exclusive="false" name="topicDueue1"
+	></rabbit:queue>
+	
+	<rabbit:queue auto-declare="true" auto-delete="false" durable="true"
+	exclusive="false" name="topicDueue2"
+	></rabbit:queue>
+	
+	
+	<rabbit:topic-exchange name="springTopic">
+		<rabbit:bindings>
+			<!-- 单个标识 -->
+			<rabbit:binding pattern="rabbitmq.topic1.*" queue="topicDueue1"></rabbit:binding>
+			<!-- 多个标识 -->
+			<rabbit:binding pattern="rabbitmq.topic2.#" queue="topicDueue2"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+	
+	
+	<!-- 
+	测试使用注解时注释掉
+	<rabbit:listener-container  error-handler="exHandler"  concurrency="5"  connection-factory="conn" acknowledge="manual"> 
+		<rabbit:listener queues="springQueue,springQueue1,topicDueue1,topicDueue2" ref="mqListener" />
+	</rabbit:listener-container> -->
+	
+   <!--  topic  -->
+	
+</beans>

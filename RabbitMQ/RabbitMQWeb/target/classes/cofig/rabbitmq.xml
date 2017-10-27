@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+                http://www.springframework.org/schema/rabbit
+                http://www.springframework.org/schema/rabbit/spring-rabbit-1.7.xsd
+                http://www.springframework.org/schema/context
+                http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<rabbit:connection-factory host="192.168.206.202" password="rabbitmq" 
+	username="rabbitmq" id="connection" publisher-confirms="true" />
+	<!-- 辅助类帮助处理生成队列和exchange -->
+	<rabbit:admin connection-factory="connection" id="rabbitAdmin" />
+	<!-- springExchange 是exchange的名字  -->
+	<rabbit:direct-exchange name="springExchange" auto-declare="true"
+		delayed="false" durable="true" auto-delete="false" >
+		<rabbit:bindings>
+			<rabbit:binding key="springRoutingkey" queue="springQueue" ></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:direct-exchange>
+		
+	<rabbit:queue auto-declare="true"  durable="true" auto-delete="false"
+	name="springQueue"/>
+   
+   
+   
+   <!--  topic  -->
+   <rabbit:queue auto-declare="true" auto-delete="false" durable="true"
+	exclusive="false" name="topicDueue1"
+	></rabbit:queue>
+	
+	<rabbit:queue auto-declare="true" auto-delete="false" durable="true"
+	exclusive="false" name="topicDueue2"
+	></rabbit:queue>
+	
+	
+	<rabbit:topic-exchange name="springTopic">
+		<rabbit:bindings>
+			<!-- 单个标识 -->
+			<rabbit:binding pattern="rabbitmq.topic1.*" queue="topicDueue1"></rabbit:binding>
+			<!-- 多个标识 -->
+			<rabbit:binding pattern="rabbitmq.topic2.#" queue="topicDueue2"></rabbit:binding>
+		</rabbit:bindings>
+	</rabbit:topic-exchange>
+   <!--  topic  -->
+   
+   
+   <rabbit:annotation-driven/>
+   
+   <bean id="amqpMessageConvert" class="org.springframework.amqp.support.converter.Jackson2JsonMessageConverter"></bean>
+   
+   <bean id="retrytemp" class="org.springframework.retry.support.RetryTemplate">
+   		<property name="backOffPolicy">
+			<bean class="org.springframework.retry.backoff.ExponentialBackOffPolicy">
+				<!-- 重试开始时间 -->
+				<property name="initialInterval" value="1000"/>
+				<!-- 重试间隔时间增长倍数 -->
+				<property name="multiplier" value="2"/>
+				<!-- 最大重试间隔时间 -->
+				<property name="maxInterval" value="5000"/>
+			</bean>
+		</property>
+		<property name="retryPolicy">
+			<bean class="org.springframework.retry.policy.SimpleRetryPolicy">
+				<!-- 最大重试次数 -->
+				<property name="maxAttempts" value="3"/>
+			</bean>
+		</property>
+   </bean>
+   
+   <!-- 消息发送到 exchange 方法返回的ack为true  。否则为false -->
+   <bean id="confirmCallback" class="com.rabbitmq.ack.SendConfirmCallback"></bean>
+   
+   <!-- 消息 未 发送到指定队列，回调 -->
+   <bean id="returnCallback" class="com.rabbitmq.ack.SendReturnCallback"></bean>
+   
+   <!-- springExchange 是exchange的名字  -->
+   
+	<!-- direct测试 -->
+  	<rabbit:template connection-factory="connection" encoding="UTF-8"
+  		exchange="springExchange" id="template" message-converter="amqpMessageConvert"
+  		retry-template="retrytemp" confirm-callback="confirmCallback" mandatory="true" return-callback="returnCallback">
+  	</rabbit:template> 
+  	
+	   
+	<!-- 
+	topic 测试
+	<rabbit:template connection-factory="connection" encoding="UTF-8"
+  		exchange="springTopic" id="template" message-converter="amqpMessageConvert"
+  		retry-template="retrytemp" confirm-callback="confirmCallback" mandatory="true" return-callback="returnCallback">
+  	</rabbit:template> -->    
+ 	  
+</beans>
