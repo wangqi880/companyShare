@@ -34,7 +34,8 @@
           p:prefix="/WEB-INF"
           p:suffix=".jsp"/>
         
-  <!-- 配置文件  <import resource="rabbitmq.xml"/> -->
+  <!-- 配置文件  -->
+	<import resource="rabbitmq.xml"/>
   <!-- 注解  -->
-    <import resource="rabbitmqAntation.xml"/>
+    <!--<import resource="rabbitmqAntation.xml"/>-->
 </beans>

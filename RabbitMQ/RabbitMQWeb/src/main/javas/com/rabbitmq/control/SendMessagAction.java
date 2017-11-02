@@ -33,13 +33,13 @@ public class SendMessagAction {
 	@ResponseBody
 	public String testDirect(String msg){
 		Map map = new HashMap();
-		map.put("≤‚ ‘1", "≤‚ ‘÷µ1");
-		map.put("≤‚ ‘2", "≤‚ ‘÷µ2");
-		map.put("≤‚ ‘3", "≤‚ ‘÷µ3");
+		map.put("key1", "value1");
+		map.put("key2", "value2");
+		map.put("key3", "value3");
 		
 		Message msgs  = new Message(JSONObject.fromObject(map).toString().getBytes(),new MessageProperties());
 		
-		Message msgs1  = new Message("≤‚ ‘springRoutingkey1".getBytes(),new MessageProperties());
+		Message msgs1  = new Message("test springRoutingkey1".getBytes(),new MessageProperties());
 		template.send("springRoutingkey", msgs); 
 		template.send("springRoutingkey1", msgs1); 
 		return "sended";
@@ -49,13 +49,13 @@ public class SendMessagAction {
 	@ResponseBody
 	public String testTopic(String msg){
 		Map map = new HashMap();
-		map.put("≤‚ ‘1", "≤‚ ‘÷µ1");
-		map.put("≤‚ ‘2", "≤‚ ‘÷µ2");
-		map.put("≤‚ ‘3", "≤‚ ‘÷µ3");
+		map.put("key1", "value1");
+		map.put("key2", "value2");
+		map.put("key3", "value3");
 		
 		Message msgs  = new Message(JSONObject.fromObject(map).toString().getBytes(),new MessageProperties());
 		
-		Message msgs1  = new Message("≤‚ ‘rabbitmq.topic2.one.an".getBytes(),new MessageProperties());
+		Message msgs1  = new Message("test rabbitmq.topic2.one.an".getBytes(),new MessageProperties());
 		template.send("rabbitmq.topic2.an", msgs); 
 		template.send("rabbitmq.topic2.one.an", msgs1); 
 		return "sended";
@@ -65,9 +65,9 @@ public class SendMessagAction {
 	@ResponseBody
 	public String testReSend(String msg){
 		Map map = new HashMap();
-		map.put("≤‚ ‘1", "≤‚ ‘÷µ1");
-		map.put("≤‚ ‘2", "≤‚ ‘÷µ2");
-		map.put("≤‚ ‘3", "≤‚ ‘÷µ3");
+		map.put("key1", "value1");
+		map.put("key2", "value2");
+		map.put("key3", "value3");
 		
 		Message msgs  = new Message(JSONObject.fromObject(map).toString().getBytes(),new MessageProperties());
 		
@@ -86,7 +86,7 @@ public class SendMessagAction {
 		if("pojo".equals(msg)){
 			template.convertAndSend("springRoutingkey", new User("zhansan", 14)); 	
 		}else{
-			template.convertAndSend("springRoutingkey", "≤‚ ‘springRoutingkey1");	
+			template.convertAndSend("springRoutingkey", "test springRoutingkey1");
 		}
 		
 		

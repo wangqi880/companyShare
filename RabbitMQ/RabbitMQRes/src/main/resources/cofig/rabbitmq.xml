@@ -11,8 +11,8 @@
 	
 	<rabbit:annotation-driven/>
 	
-	<rabbit:connection-factory  host="192.168.206.202" id="conn" 
-	password="rabbitmq" username="rabbitmq" virtual-host="/" port="5672"/>
+	<rabbit:connection-factory  host="192.168.137.129" id="conn"
+	password="wq" username="wq" virtual-host="/" port="5672"/>
 	
 	<rabbit:admin connection-factory="conn" id="rabbitAdmin"/>
 	
@@ -61,9 +61,9 @@
 	
 	<!-- acknowledge="manual"  手动确认消息  ChannelAwareMessageListener  -->
 	<!-- error-handler 异常 处理但是 。。onMessage 方法不能捕获异常 -->
-	<!-- <rabbit:listener-container  error-handler="exHandler"  concurrency="5"  connection-factory="conn" acknowledge="manual"> 
+	 <rabbit:listener-container  error-handler="exHandler"  concurrency="5"  connection-factory="conn" acknowledge="manual">
 		<rabbit:listener queues="springQueue,springQueue1" ref="mqListener" />
-	</rabbit:listener-container> -->
+	</rabbit:listener-container>
 	
 	
 	<!-- ++++++++++++++++++++++++++ -->

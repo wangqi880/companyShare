@@ -15,11 +15,11 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 public class RabbitMQOneCustomer {
 	public static void main(String[] args) throws IOException, TimeoutException {
 		ConnectionFactory cf = new ConnectionFactory();
-		cf.setHost("192.168.206.202");
+		cf.setHost("192.168.137.129");
 		cf.setPort(AMQP.PROTOCOL.PORT);
 		//cf.setVirtualHost("/");
-		cf.setPassword("rabbitmq");
-		cf.setUsername("rabbitmq");
+		cf.setPassword("wq");
+		cf.setUsername("wq");
 		Connection con =  cf.newConnection();
 		Channel c = con.createChannel();
 		c.queueDeclare("rabbitmq.queueOne", false, false, false, null);

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="RabbitMQRes:war">
+    <output-path>E:/program/tomcat7_rabbitMqRec/apache-tomcat-7.0.73/webapps</output-path>
+    <root id="archive" name="RabbitMQRes.war">
+      <element id="artifact" artifact-name="RabbitMQRes:war exploded" />
+    </root>
+  </artifact>
+</component>

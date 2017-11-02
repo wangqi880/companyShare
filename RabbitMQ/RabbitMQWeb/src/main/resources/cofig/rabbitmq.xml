@@ -9,8 +9,8 @@
                 http://www.springframework.org/schema/context
                 http://www.springframework.org/schema/context/spring-context.xsd">
 	
-	<rabbit:connection-factory host="192.168.206.202" password="rabbitmq" 
-	username="rabbitmq" id="connection" publisher-confirms="true" />
+	<rabbit:connection-factory host="192.168.137.129" password="wq"
+	username="wq" id="connection" publisher-confirms="true" />
 	<!-- 辅助类帮助处理生成队列和exchange -->
 	<rabbit:admin connection-factory="connection" id="rabbitAdmin" />
 	<!-- springExchange 是exchange的名字  -->

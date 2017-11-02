@@ -11,8 +11,8 @@
 	
 	
 	
-	<rabbit:connection-factory  host="192.168.206.202" id="conn" 
-	password="rabbitmq" username="rabbitmq" virtual-host="/" port="5672"/>
+	<rabbit:connection-factory  host="192.168.137.129" id="conn"
+	password="wq" username="wq" virtual-host="/" port="5672"/>
 	
 	<rabbit:admin connection-factory="conn" id="rabbitAdmin"/>
 

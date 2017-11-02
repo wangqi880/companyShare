@@ -11,15 +11,15 @@ import org.springframework.stereotype.Component;
 	,key=""))*/
 
 @Component
-@RabbitListener(id="muilt", queues={"springQueue"})
+/*@RabbitListener(id="muilt", queues={"springQueue"})*/
 public class MessageListener {
 
-	@RabbitHandler
+	/*@RabbitHandler*/
 	public void getData(String data){
 		System.out.println(data);
 	}
 	
-	@RabbitHandler
+	/*@RabbitHandler*/
 	public void getData(User user){
 		System.out.println(user.toString());
 	}

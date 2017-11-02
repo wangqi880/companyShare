@@ -15,9 +15,9 @@ import com.rabbitmq.client.AMQP.BasicProperties;
 public class RabbitMQTwoCustomer {
 	public static void main(String[] args) throws IOException, TimeoutException {
 		ConnectionFactory cf = new ConnectionFactory();
-		cf.setUsername("rabbitmq");
-		cf.setPassword("rabbitmq");
-		cf.setHost("192.168.206.202");
+		cf.setUsername("wq");
+		cf.setPassword("wq");
+		cf.setHost("192.168.137.129");
 		Connection con = cf.newConnection();
 		Channel channel = con.createChannel();
 		channel.exchangeDeclare("directExchange", "direct");

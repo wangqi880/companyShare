@@ -12,7 +12,7 @@ public class RabbitMQLisenter implements MessageListener{
 
 	public void onMessage(Message message) {
 			System.out.println(new String(message.getBody()));
-			int q = 1/0;
+			//int q = 1/0;
 	}
 
 }
